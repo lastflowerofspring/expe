@@ -903,7 +903,7 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
       {/* 1:1 IDLE PARITY VERIFICATION STATUS BAR */}
       {labMode === 'comparator' && (
         <div className="bg-[#121217] border border-neutral-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs shadow-inner">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-wrap">
             <div className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 ${
               activeExpression === 'idle'
                 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
@@ -921,7 +921,11 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
                 </>
               )}
             </div>
-            <span className="text-neutral-400 text-[11px] hidden md:inline">
+            <div className="px-2.5 py-1 rounded-lg bg-neutral-900 border border-neutral-800 text-[11px] font-mono text-neutral-300 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span>Native Aspect Ratio: 2377 × 4096 (0.58:1 Locked)</span>
+            </div>
+            <span className="text-neutral-400 text-[11px] hidden xl:inline">
               15/15 vector layers from model.svg synchronized with independent Head/Torso pivot
             </span>
           </div>
@@ -963,13 +967,23 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
                 </div>
 
                 {/* Reference Visual Viewport */}
-                <div className="w-full flex-1 flex items-center justify-center relative min-h-[360px] py-2">
+                <div className="w-full flex-1 flex items-center justify-center relative min-h-[360px] h-[460px] py-2">
                   {referenceSource === 'model-svg' ? (
-                    <div className="relative flex items-center justify-center w-full h-full max-h-[460px] aspect-[2377/4096] select-none mx-auto">
+                    <div
+                      className="relative flex items-center justify-center select-none mx-auto"
+                      style={{
+                        aspectRatio: '2377 / 4096',
+                        height: '100%',
+                        maxHeight: '460px',
+                        width: 'auto',
+                        maxWidth: '100%',
+                      }}
+                    >
                       <img
                         src="/model.svg"
                         alt="Original Coach Sloane model.svg"
                         className="w-full h-full object-contain select-none drop-shadow-2xl"
+                        style={{ display: 'block' }}
                       />
                     </div>
                   ) : (
@@ -985,7 +999,7 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
 
                 <div className="w-full text-center text-[11px] text-neutral-500 font-mono pt-2 border-t border-neutral-900">
                   {referenceSource === 'model-svg'
-                    ? 'Original Vector Image Asset • 15 Semantic Illustrated Layers'
+                    ? 'Original Vector Image Asset • 15 Semantic Illustrated Layers • Native Ratio'
                     : 'Interactive Rive 7.0 WASM Runtime • 77 Animations'}
                 </div>
               </div>
@@ -1009,12 +1023,12 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
                 </div>
 
                 {/* SVG Vector Render with Precise Deformers */}
-                <div className="w-full flex-1 flex items-center justify-center relative min-h-[360px] py-2">
+                <div className="w-full flex-1 flex items-center justify-center relative min-h-[360px] h-[460px] py-2">
                   <ModelSvgCanvas def={deformations} showBones={showBones} />
                 </div>
 
                 <div className="w-full text-center text-[11px] text-neutral-500 font-mono pt-2 border-t border-neutral-900">
-                  Separated Cranial Head Rig & Torso Base • Zero Idle Drift
+                  Separated Cranial Head Rig & Torso Base • 2377 × 4096 Locked Ratio
                 </div>
               </div>
             </div>
@@ -1044,14 +1058,23 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
               </div>
 
               {/* Stacked Canvases with Wipe Curtain */}
-              <div className="relative w-full max-w-[420px] h-[460px] flex items-center justify-center overflow-hidden">
+              <div
+                className="relative flex items-center justify-center overflow-hidden mx-auto rounded-2xl border border-neutral-800/80 shadow-2xl bg-black/40"
+                style={{
+                  aspectRatio: '2377 / 4096',
+                  height: '460px',
+                  maxHeight: '460px',
+                  width: 'auto',
+                  maxWidth: '100%',
+                }}
+              >
                 {/* Underneath: Original Reference (model.svg image or .riv) */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   {referenceSource === 'model-svg' ? (
                     <img
                       src="/model.svg"
                       alt="Original model.svg"
-                      className="w-full h-full max-h-[460px] aspect-[2377/4096] object-contain select-none"
+                      className="w-full h-full object-contain select-none pointer-events-none"
                     />
                   ) : (
                     <RiveCanvasView
@@ -1066,7 +1089,7 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
 
                 {/* Foreground Clipped: Cloned Rig */}
                 <div
-                  className="absolute inset-0 flex items-center justify-center overflow-hidden"
+                  className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none"
                   style={{
                     clipPath: `polygon(${wipePercent}% 0, 100% 0, 100% 100%, ${wipePercent}% 100%)`,
                   }}
@@ -1115,14 +1138,23 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
               </div>
 
               {/* Stacked Canvases */}
-              <div className="relative w-full max-w-[420px] h-[460px] flex items-center justify-center">
+              <div
+                className="relative flex items-center justify-center overflow-hidden mx-auto rounded-2xl border border-neutral-800/80 shadow-2xl bg-black/40"
+                style={{
+                  aspectRatio: '2377 / 4096',
+                  height: '460px',
+                  maxHeight: '460px',
+                  width: 'auto',
+                  maxWidth: '100%',
+                }}
+              >
                 {/* Background: Original Reference */}
                 <div className="absolute inset-0 z-0 flex items-center justify-center">
                   {referenceSource === 'model-svg' ? (
                     <img
                       src="/model.svg"
                       alt="Original model.svg"
-                      className="w-full h-full max-h-[460px] aspect-[2377/4096] object-contain select-none"
+                      className="w-full h-full object-contain select-none"
                     />
                   ) : (
                     <RiveCanvasView
@@ -1137,7 +1169,7 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
 
                 {/* Foreground: Clone Overlay */}
                 <div
-                  className="absolute inset-0 z-10 pointer-events-none transition-opacity"
+                  className="absolute inset-0 z-10 pointer-events-none transition-opacity flex items-center justify-center"
                   style={{ opacity: overlayOpacity / 100 }}
                 >
                   <ModelSvgCanvas def={deformations} showBones={false} />
@@ -1615,10 +1647,12 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
 interface ModelSvgCanvasProps {
   def: any;
   showBones?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-const ModelSvgCanvas: React.FC<ModelSvgCanvasProps> = ({ def, showBones }) => {
-  return <ModelSvgRig def={def} showBones={showBones} />;
+const ModelSvgCanvas: React.FC<ModelSvgCanvasProps> = ({ def, showBones, className, style }) => {
+  return <ModelSvgRig def={def} showBones={showBones} className={className} style={style} />;
 };
 
 const _LegacyModelSvgCanvas: React.FC<ModelSvgCanvasProps> = ({ def, showBones }) => {

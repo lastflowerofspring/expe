@@ -80,9 +80,11 @@ export const MODEL_SVG_PATHS = {
 export interface ModelSvgRigProps {
   def: any;
   showBones?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones }) => {
+export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, className, style }) => {
   const mouthCenterX = 1974;
   const mouthCenterY = 2006 + (def.mouthY || 0);
   const smileVal = def.smileFrown || 0;
@@ -90,11 +92,24 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones }) => {
   const jawAperture = Math.max(0, def.jawOpen || 0);
 
   return (
-    <div className="relative flex items-center justify-center w-full h-full max-h-[460px] aspect-[2377/4096] select-none mx-auto">
+    <div
+      className={`relative flex items-center justify-center select-none mx-auto ${className || ''}`}
+      style={{
+        aspectRatio: '2377 / 4096',
+        height: '100%',
+        maxHeight: '460px',
+        width: 'auto',
+        maxWidth: '100%',
+        ...style,
+      }}
+    >
       <svg
         viewBox="0 0 4096 4096"
+        width="2377"
+        height="4096"
         preserveAspectRatio="none"
         className="w-full h-full select-none drop-shadow-2xl"
+        style={{ display: 'block', maxWidth: '100%', maxHeight: '100%' }}
       >
         <defs>
           {/* Authentic Gradient from model.svg */}

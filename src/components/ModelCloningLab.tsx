@@ -362,11 +362,11 @@ export const ModelCloningLab: React.FC<ModelCloningLabProps> = ({
     const breathY = autoIdleRunning ? Math.sin(breathPhase) * 2.2 : 0;
     const breathScale = autoIdleRunning ? 1 + Math.sin(breathPhase) * 0.007 : 1;
 
-    // Mouse Tracking Parallax Influence
-    const trackYaw = mouseTracking ? cursorPos.x * 12 : 0;
-    const trackPitch = mouseTracking ? cursorPos.y * 8 : 0;
-    const trackGazeX = mouseTracking ? cursorPos.x * 7 : pupilDrift.x;
-    const trackGazeY = mouseTracking ? cursorPos.y * 5 : pupilDrift.y;
+    // Mouse Tracking Parallax Influence - Full Dynamic Range
+    const trackYaw = mouseTracking ? cursorPos.x * 14 : 0;
+    const trackPitch = mouseTracking ? cursorPos.y * 10 : 0;
+    const trackGazeX = mouseTracking ? cursorPos.x * 8 : pupilDrift.x;
+    const trackGazeY = mouseTracking ? cursorPos.y * 6 : pupilDrift.y;
 
     // When Idle expression is active, strictly 0 offsets for 100% 1:1 model.svg match
     if (activeExpression === 'idle') {

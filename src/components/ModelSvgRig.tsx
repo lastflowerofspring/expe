@@ -135,14 +135,14 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
         {/* ========================================================= */}
         {/* LAYER 0: UNIFIED TORSO & BODY SILHOUETTE                  */}
         {/* Unbroken, pristine continuous vector curves from model.svg */}
-        {/* Organic spine follow-through sway with ZERO sharp seams   */}
+        {/* Full-amplitude organic spine sway with ZERO sharp seams   */}
         {/* ========================================================= */}
         <g
           id="Grounded-Torso-Group"
           style={{
-            transform: `translateY(${def.torsoY * 1.5}px) translateX(${def.headYaw * 0.8}px) rotate(${def.headRoll * 0.25}deg)`,
+            transform: `translateY(${def.torsoY * 2.0}px) translateX(${def.headYaw * 1.4}px) rotate(${def.headRoll * 0.32}deg)`,
             transformOrigin: '1974px 3808px',
-            transition: 'transform 0.2s cubic-bezier(0.25, 1, 0.5, 1)',
+            transition: 'transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1)',
           }}
         >
           {/* Path 0: Full Continuous Base Hijab Silhouette */}
@@ -160,15 +160,15 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
 
         {/* ========================================================= */}
         {/* LAYER 1: INDEPENDENT HEAD & FACE RIG                      */}
-        {/* Pivots organically at the anatomical neck joint.           */}
-        {/* Sits naturally inside the hijab opening with zero cut seams*/}
+        {/* Full-amplitude anatomical head pivot at the neck joint.    */}
+        {/* Unconstrained full yaw, pitch, roll, and expressive motion */}
         {/* ========================================================= */}
         <g
           id="Head-Rig-Group"
           style={{
-            transform: `translate(${def.headYaw * 3.2}px, ${def.headPitch * 4.2}px) rotate(${def.headRoll * 0.75}deg) scale(${def.headScale})`,
+            transform: `translate(${def.headYaw * 4.6}px, ${def.headPitch * 6.0}px) rotate(${def.headRoll}deg) scale(${def.headScale})`,
             transformOrigin: '1974px 2350px',
-            transition: 'transform 0.2s cubic-bezier(0.25, 1, 0.5, 1)',
+            transition: 'transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1)',
           }}
         >
           {/* 1. Path 2: Face Skin Base */}
@@ -199,8 +199,8 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             <g
               id="Left-Eye-Group"
               style={{
-                transform: `translate(${def.gazeX * 4}px, ${def.gazeY * 3}px)`,
-                transition: 'transform 0.12s ease-out',
+                transform: `translate(${def.gazeX * 4.5}px, ${def.gazeY * 3.5}px)`,
+                transition: 'transform 0.08s ease-out',
               }}
             >
               {/* Left Eye Socket */}
@@ -209,7 +209,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
                   transform: `scale(1, ${Math.max(0.12, 1 - def.blink * 0.88 - (def.squint || 0) * 0.35)})`,
                   transformOrigin: '1355px 1700px',
                   opacity: Math.max(0.18, 1 - def.blink * 0.82),
-                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease-out',
+                  transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                 }}
               >
                 <path fill="#7B6360" d={MODEL_SVG_PATHS.eyeSocketLeft} />
@@ -220,7 +220,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
                 style={{
                   transform: `scale(1, ${Math.max(0.08, 1 - def.blink * 0.92 - (def.squint || 0) * 0.4)}) translateY(${def.blink * 26}px)`,
                   transformOrigin: '1355px 1700px',
-                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)',
+                  transition: 'transform 0.1s ease-out',
                 }}
               >
                 <path fill="#604439" d={MODEL_SVG_PATHS.eyeLashesLeft} />
@@ -231,8 +231,8 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             <g
               id="Right-Eye-Group"
               style={{
-                transform: `translate(${def.gazeX * 4}px, ${def.gazeY * 3}px)`,
-                transition: 'transform 0.12s ease-out',
+                transform: `translate(${def.gazeX * 4.5}px, ${def.gazeY * 3.5}px)`,
+                transition: 'transform 0.08s ease-out',
               }}
             >
               {/* Right Eye Socket */}
@@ -241,7 +241,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
                   transform: `scale(1, ${Math.max(0.12, 1 - def.blink * 0.88 - (def.squint || 0) * 0.35)})`,
                   transformOrigin: '2625px 1700px',
                   opacity: Math.max(0.18, 1 - def.blink * 0.82),
-                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease-out',
+                  transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                 }}
               >
                 <path fill="#7B6360" d={MODEL_SVG_PATHS.eyeSocketRight} />
@@ -252,7 +252,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
                 style={{
                   transform: `scale(1, ${Math.max(0.08, 1 - def.blink * 0.92 - (def.squint || 0) * 0.4)}) translateY(${def.blink * 26}px)`,
                   transformOrigin: '2625px 1700px',
-                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)',
+                  transition: 'transform 0.1s ease-out',
                 }}
               >
                 <path fill="#604439" d={MODEL_SVG_PATHS.eyeLashesRight} />
@@ -265,9 +265,9 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             {/* Left Eyebrow (Pivot around 1377px 1330px) */}
             <g
               style={{
-                transform: `translate(0px, ${def.eyebrowLY * 5.5}px) rotate(${def.eyebrowLRotate}deg)`,
+                transform: `translate(0px, ${def.eyebrowLY * 6.0}px) rotate(${def.eyebrowLRotate}deg)`,
                 transformOrigin: '1377px 1330px',
-                transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
+                transition: 'transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1)',
               }}
             >
               <path fill="#580D2B" d={MODEL_SVG_PATHS.eyebrowLeft} />
@@ -276,9 +276,9 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             {/* Right Eyebrow (Pivot around 2637px 1340px) */}
             <g
               style={{
-                transform: `translate(0px, ${def.eyebrowRY * 5.5}px) rotate(${def.eyebrowRRotate}deg)`,
+                transform: `translate(0px, ${def.eyebrowRY * 6.0}px) rotate(${def.eyebrowRRotate}deg)`,
                 transformOrigin: '2637px 1340px',
-                transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
+                transition: 'transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1)',
               }}
             >
               <path fill="#580D2B" d={MODEL_SVG_PATHS.eyebrowRight} />
@@ -290,7 +290,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             id="Glasses-Rig-Layer"
             style={{
               transform: `translate(${def.glassesParallaxX}px, ${def.glassesParallaxY}px)`,
-              transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
+              transition: 'transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1)',
             }}
           >
             <path fill="#580D2B" d={MODEL_SVG_PATHS.glasses} />
@@ -304,7 +304,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
                 style={{
                   transform: `translate(0px, ${def.mouthY || 0}px)`,
                   opacity: Math.min(1, Math.max(def.teethVisible || 0, jawAperture * 2.8)),
-                  transition: 'transform 0.15s ease-out, opacity 0.12s ease-out',
+                  transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                 }}
               >
                 {/* Oral Depth Chamber */}
@@ -337,7 +337,7 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
               style={{
                 transform: `translate(0px, ${def.mouthY || 0}px) scale(${lipScale}, ${1 + smileVal * 0.22 + jawAperture * 0.45})`,
                 transformOrigin: '1974px 2006px',
-                transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
+                transition: 'transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1)',
               }}
             >
               <path fill="#E5605F" d={MODEL_SVG_PATHS.smile} />

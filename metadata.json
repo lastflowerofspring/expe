@@ -1,0 +1,6 @@
+{
+  "name": "Rive Animation Viewer",
+  "description": "Interactive previewer and player for .riv (Rive) animation files with state machine and playback controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

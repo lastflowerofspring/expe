@@ -124,21 +124,6 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             <stop offset="1" stopColor="#80615E" />
           </linearGradient>
 
-          {/* Cranial Hood Clip: Covers upper cranial dome of the hijab above the neck */}
-          <clipPath id="cranial-hood-clip">
-            <path d="M 0 0 L 4096 0 L 4096 2500 C 3300 2560 2600 2580 1974 2580 C 1350 2580 700 2560 0 2500 Z" />
-          </clipPath>
-
-          {/* Left Eye Socket ClipPath for natural eyelid blinks */}
-          <clipPath id="left-eye-clip-m">
-            <path d={MODEL_SVG_PATHS.eyeSocketLeft} />
-          </clipPath>
-
-          {/* Right Eye Socket ClipPath for natural eyelid blinks */}
-          <clipPath id="right-eye-clip-m">
-            <path d={MODEL_SVG_PATHS.eyeSocketRight} />
-          </clipPath>
-
           {/* Speech Oral Cavity Depth */}
           <linearGradient id="oral-depth-m" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#25080E" />
@@ -148,18 +133,19 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
         </defs>
 
         {/* ========================================================= */}
-        {/* LAYER 0: GROUNDED TORSO & BODY AREA                      */}
-        {/* Anchors shoulders, dark shirt, and chest drape folds.     */}
-        {/* Does NOT rotate with head yaw, pitch, or roll!           */}
+        {/* LAYER 0: UNIFIED TORSO & BODY SILHOUETTE                  */}
+        {/* Unbroken, pristine continuous vector curves from model.svg */}
+        {/* Organic spine follow-through sway with ZERO sharp seams   */}
         {/* ========================================================= */}
         <g
           id="Grounded-Torso-Group"
           style={{
-            transform: `translateY(${def.torsoY * 1.5}px)`,
-            transition: 'transform 0.08s ease-out',
+            transform: `translateY(${def.torsoY * 1.5}px) translateX(${def.headYaw * 0.8}px) rotate(${def.headRoll * 0.25}deg)`,
+            transformOrigin: '1974px 3808px',
+            transition: 'transform 0.2s cubic-bezier(0.25, 1, 0.5, 1)',
           }}
         >
-          {/* Path 0: Full Base Hijab & Shoulders Silhouette */}
+          {/* Path 0: Full Continuous Base Hijab Silhouette */}
           <path fill="#A48784" d={MODEL_SVG_PATHS.hijab} />
 
           {/* Path 1: Dark Shirt Hem */}
@@ -173,105 +159,115 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
         </g>
 
         {/* ========================================================= */}
-        {/* LAYER 1: INDEPENDENT HEAD RIG                             */}
-        {/* Pivots independently at the anatomical neck joint.         */}
-        {/* Contains upper cranial hijab dome, face skin, facial      */}
-        {/* features, eyes, eyebrows, wire glasses, and smile!        */}
+        {/* LAYER 1: INDEPENDENT HEAD & FACE RIG                      */}
+        {/* Pivots organically at the anatomical neck joint.           */}
+        {/* Sits naturally inside the hijab opening with zero cut seams*/}
         {/* ========================================================= */}
         <g
           id="Head-Rig-Group"
           style={{
-            transform: `translate(${def.headYaw * 4.5}px, ${def.headPitch * 6}px) rotate(${def.headRoll}deg) scale(${def.headScale})`,
-            transformOrigin: '1974px 2480px',
-            transition: 'transform 0.08s cubic-bezier(0.2, 0.8, 0.3, 1)',
+            transform: `translate(${def.headYaw * 3.2}px, ${def.headPitch * 4.2}px) rotate(${def.headRoll * 0.75}deg) scale(${def.headScale})`,
+            transformOrigin: '1974px 2350px',
+            transition: 'transform 0.2s cubic-bezier(0.25, 1, 0.5, 1)',
           }}
         >
-          {/* 1. Upper Cranial Dome of Hijab (Clipped to skull/cranial area) */}
-          <g clipPath="url(#cranial-hood-clip)">
-            <path fill="#A48784" d={MODEL_SVG_PATHS.hijab} />
-          </g>
-
-          {/* 2. Path 2: Face Skin Base */}
+          {/* 1. Path 2: Face Skin Base */}
           <path fill="#FDD7CE" d={MODEL_SVG_PATHS.faceSkin} />
 
-          {/* 3. Path 3: Shadows Under Hijab */}
+          {/* 2. Path 3: Shadows Under Hijab */}
           <path fill="#7B6360" d={MODEL_SVG_PATHS.shadowsUnderHijab} />
 
-          {/* 4. Path 4: Right Cheek Linear Gradient */}
+          {/* 3. Path 4: Right Cheek Linear Gradient */}
           <path fill="url(#chk-m)" d={MODEL_SVG_PATHS.cheekGrad} />
 
-          {/* 5. Path 5: Chin Wrap Overlap */}
+          {/* 4. Path 5: Chin Wrap Overlap */}
           <path fill="#A48784" d={MODEL_SVG_PATHS.chinWrap} />
 
-          {/* 6. Path 6: Face Light Base */}
+          {/* 5. Path 6: Face Light Base */}
           <path fill="#FDD7CE" d={MODEL_SVG_PATHS.faceLightBase} />
 
-          {/* 7. Path 7: Forehead & Bridge Highlight */}
+          {/* 6. Path 7: Forehead & Bridge Highlight */}
           <path fill="#FEE4DC" d={MODEL_SVG_PATHS.foreheadHighlight} />
 
-          {/* 8. Path 13 (Subpaths 0 & 2): Left and Right Cheek Fold Creases */}
+          {/* 7. Path 13 (Subpaths 0 & 2): Left and Right Cheek Fold Creases */}
           <path fill="#604439" d={MODEL_SVG_PATHS.foldCheekLeft} />
           <path fill="#604439" d={MODEL_SVG_PATHS.foldCheekRight} />
 
-          {/* 9. EYES LAYER (Paths 8 & 9) */}
+          {/* 8. EYES LAYER (Paths 8 & 9) with Smooth Organic Curvature Blinking */}
           <g id="Eyes-Rig-Layer">
-            {/* Left Eye Socket */}
-            <path fill="#7B6360" d={MODEL_SVG_PATHS.eyeSocketLeft} />
-            {/* Left Eye Lashes & Gaze Tracking */}
+            {/* Left Eye Group */}
             <g
+              id="Left-Eye-Group"
               style={{
                 transform: `translate(${def.gazeX * 4}px, ${def.gazeY * 3}px)`,
-                transition: 'transform 0.06s ease-out',
+                transition: 'transform 0.12s ease-out',
               }}
             >
-              <path fill="#604439" d={MODEL_SVG_PATHS.eyeLashesLeft} />
-            </g>
-            {/* Left Eyelid Blink Cover (descends smoothly over socket when blinking) */}
-            {def.blink > 0.02 && (
-              <rect
-                x="1000"
-                y="1450"
-                width="600"
-                height={def.blink * 360}
-                fill="#FDD7CE"
-                clipPath="url(#left-eye-clip-m)"
-                style={{ transition: 'height 0.05s ease-out' }}
-              />
-            )}
+              {/* Left Eye Socket */}
+              <g
+                style={{
+                  transform: `scale(1, ${Math.max(0.12, 1 - def.blink * 0.88 - (def.squint || 0) * 0.35)})`,
+                  transformOrigin: '1355px 1700px',
+                  opacity: Math.max(0.18, 1 - def.blink * 0.82),
+                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease-out',
+                }}
+              >
+                <path fill="#7B6360" d={MODEL_SVG_PATHS.eyeSocketLeft} />
+              </g>
 
-            {/* Right Eye Socket */}
-            <path fill="#7B6360" d={MODEL_SVG_PATHS.eyeSocketRight} />
-            {/* Right Eye Lashes & Gaze Tracking */}
+              {/* Left Eye Lashes & Pupils */}
+              <g
+                style={{
+                  transform: `scale(1, ${Math.max(0.08, 1 - def.blink * 0.92 - (def.squint || 0) * 0.4)}) translateY(${def.blink * 26}px)`,
+                  transformOrigin: '1355px 1700px',
+                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)',
+                }}
+              >
+                <path fill="#604439" d={MODEL_SVG_PATHS.eyeLashesLeft} />
+              </g>
+            </g>
+
+            {/* Right Eye Group */}
             <g
+              id="Right-Eye-Group"
               style={{
                 transform: `translate(${def.gazeX * 4}px, ${def.gazeY * 3}px)`,
-                transition: 'transform 0.06s ease-out',
+                transition: 'transform 0.12s ease-out',
               }}
             >
-              <path fill="#604439" d={MODEL_SVG_PATHS.eyeLashesRight} />
+              {/* Right Eye Socket */}
+              <g
+                style={{
+                  transform: `scale(1, ${Math.max(0.12, 1 - def.blink * 0.88 - (def.squint || 0) * 0.35)})`,
+                  transformOrigin: '2625px 1700px',
+                  opacity: Math.max(0.18, 1 - def.blink * 0.82),
+                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s ease-out',
+                }}
+              >
+                <path fill="#7B6360" d={MODEL_SVG_PATHS.eyeSocketRight} />
+              </g>
+
+              {/* Right Eye Lashes & Pupils */}
+              <g
+                style={{
+                  transform: `scale(1, ${Math.max(0.08, 1 - def.blink * 0.92 - (def.squint || 0) * 0.4)}) translateY(${def.blink * 26}px)`,
+                  transformOrigin: '2625px 1700px',
+                  transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)',
+                }}
+              >
+                <path fill="#604439" d={MODEL_SVG_PATHS.eyeLashesRight} />
+              </g>
             </g>
-            {/* Right Eyelid Blink Cover */}
-            {def.blink > 0.02 && (
-              <rect
-                x="2350"
-                y="1450"
-                width="600"
-                height={def.blink * 360}
-                fill="#FDD7CE"
-                clipPath="url(#right-eye-clip-m)"
-                style={{ transition: 'height 0.05s ease-out' }}
-              />
-            )}
           </g>
 
-          {/* 10. EYEBROWS LAYER (Path 10) */}
+          {/* 9. EYEBROWS LAYER (Path 10) */}
           <g id="Eyebrows-Rig-Layer">
             {/* Left Eyebrow (Pivot around 1377px 1330px) */}
             <g
               style={{
-                transform: `translate(0px, ${def.eyebrowLY * 6}px) rotate(${def.eyebrowLRotate}deg)`,
+                transform: `translate(0px, ${def.eyebrowLY * 5.5}px) rotate(${def.eyebrowLRotate}deg)`,
                 transformOrigin: '1377px 1330px',
-                transition: 'transform 0.08s ease-out',
+                transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
               }}
             >
               <path fill="#580D2B" d={MODEL_SVG_PATHS.eyebrowLeft} />
@@ -280,84 +276,72 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             {/* Right Eyebrow (Pivot around 2637px 1340px) */}
             <g
               style={{
-                transform: `translate(0px, ${def.eyebrowRY * 6}px) rotate(${def.eyebrowRRotate}deg)`,
+                transform: `translate(0px, ${def.eyebrowRY * 5.5}px) rotate(${def.eyebrowRRotate}deg)`,
                 transformOrigin: '2637px 1340px',
-                transition: 'transform 0.08s ease-out',
+                transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
               }}
             >
               <path fill="#580D2B" d={MODEL_SVG_PATHS.eyebrowRight} />
             </g>
           </g>
 
-          {/* 11. WIRE GLASSES FRAMES (Path 11) */}
+          {/* 10. WIRE GLASSES FRAMES (Path 11) with Subdued 3D Depth Parallax */}
           <g
             id="Glasses-Rig-Layer"
             style={{
               transform: `translate(${def.glassesParallaxX}px, ${def.glassesParallaxY}px)`,
-              transition: 'transform 0.08s ease-out',
+              transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
             }}
           >
             <path fill="#580D2B" d={MODEL_SVG_PATHS.glasses} />
           </g>
 
-          {/* 12. MOUTH & SMILE (Path 12) */}
+          {/* 11. MOUTH & SMILE (Path 12) with Continuous Smooth Viseme Transition */}
           <g id="Mouth-Rig-Layer">
-            {jawAperture > 0.06 ? (
-              /* Dynamic Speech / Viseme Oral Cavity */
+            {/* Dynamic Pearlescent Teeth / Oral Cavity behind lips */}
+            {(jawAperture > 0.02 || (def.teethVisible && def.teethVisible > 0.02)) && (
               <g
                 style={{
                   transform: `translate(0px, ${def.mouthY || 0}px)`,
-                  transition: 'transform 0.08s ease-out',
+                  opacity: Math.min(1, Math.max(def.teethVisible || 0, jawAperture * 2.8)),
+                  transition: 'transform 0.15s ease-out, opacity 0.12s ease-out',
                 }}
               >
-                {/* Oral Depth */}
-                <ellipse
-                  cx={mouthCenterX}
-                  cy={mouthCenterY}
-                  rx={185 * lipScale}
-                  ry={jawAperture * 90}
-                  fill="url(#oral-depth-m)"
-                />
+                {/* Oral Depth Chamber */}
+                {jawAperture > 0.05 && (
+                  <ellipse
+                    cx={mouthCenterX}
+                    cy={mouthCenterY}
+                    rx={175 * lipScale}
+                    ry={jawAperture * 80}
+                    fill="url(#oral-depth-m)"
+                  />
+                )}
                 {/* Upper Teeth Crescent */}
                 <path
                   fill="#FAF3F0"
-                  d={`M ${mouthCenterX - 140 * lipScale} ${mouthCenterY - jawAperture * 25} Q ${mouthCenterX} ${mouthCenterY - jawAperture * 70} ${mouthCenterX + 140 * lipScale} ${mouthCenterY - jawAperture * 25} Q ${mouthCenterX} ${mouthCenterY - jawAperture * 5} ${mouthCenterX - 140 * lipScale} ${mouthCenterY - jawAperture * 25} Z`}
+                  d={`M ${mouthCenterX - 130 * lipScale} ${mouthCenterY - jawAperture * 15} Q ${mouthCenterX} ${mouthCenterY - 18 - jawAperture * 40} ${mouthCenterX + 130 * lipScale} ${mouthCenterY - jawAperture * 15} Q ${mouthCenterX} ${mouthCenterY + 12 - jawAperture * 5} ${mouthCenterX - 130 * lipScale} ${mouthCenterY - jawAperture * 15} Z`}
                 />
                 {/* Soft Tongue Floor */}
-                <path
-                  fill="#DF5A67"
-                  d={`M ${mouthCenterX - 120 * lipScale} ${mouthCenterY + jawAperture * 35} Q ${mouthCenterX} ${mouthCenterY + jawAperture * 10} ${mouthCenterX + 120 * lipScale} ${mouthCenterY + jawAperture * 35} Q ${mouthCenterX} ${mouthCenterY + jawAperture * 75} ${mouthCenterX - 120 * lipScale} ${mouthCenterY + jawAperture * 35} Z`}
-                />
-                {/* Coral Lip Frame */}
-                <ellipse
-                  cx={mouthCenterX}
-                  cy={mouthCenterY}
-                  rx={190 * lipScale}
-                  ry={jawAperture * 92}
-                  fill="none"
-                  stroke="#E5605F"
-                  strokeWidth="24"
-                />
-              </g>
-            ) : (
-              /* Authentic Smile Contour from model.svg */
-              <g
-                style={{
-                  transform: `translate(0px, ${def.mouthY || 0}px) scale(${lipScale}, ${1 + smileVal * 0.22})`,
-                  transformOrigin: '1974px 2006px',
-                  transition: 'transform 0.08s ease-out',
-                }}
-              >
-                {def.teethVisible > 0.05 && (
+                {jawAperture > 0.15 && (
                   <path
-                    fill="#FAF3F0"
-                    style={{ opacity: def.teethVisible }}
-                    d="M 1844 1994 Q 1974 1982 2104 1994 Q 1974 2012 1844 1994 Z"
+                    fill="#DF5A67"
+                    d={`M ${mouthCenterX - 100 * lipScale} ${mouthCenterY + jawAperture * 30} Q ${mouthCenterX} ${mouthCenterY + jawAperture * 12} ${mouthCenterX + 100 * lipScale} ${mouthCenterY + jawAperture * 30} Q ${mouthCenterX} ${mouthCenterY + jawAperture * 65} ${mouthCenterX - 100 * lipScale} ${mouthCenterY + jawAperture * 30} Z`}
                   />
                 )}
-                <path fill="#E5605F" d={MODEL_SVG_PATHS.smile} />
               </g>
             )}
+
+            {/* Authentic Coral Smile Lip Contour (Preserves 100% Vector Parity) */}
+            <g
+              style={{
+                transform: `translate(0px, ${def.mouthY || 0}px) scale(${lipScale}, ${1 + smileVal * 0.22 + jawAperture * 0.45})`,
+                transformOrigin: '1974px 2006px',
+                transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1)',
+              }}
+            >
+              <path fill="#E5605F" d={MODEL_SVG_PATHS.smile} />
+            </g>
           </g>
         </g>
 
@@ -369,53 +353,53 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
             <circle cx="1974" cy="3808" r="28" fill="#f59e0b" />
 
             {/* Neck Joint Pivot */}
-            <line x1="1974" y1="2700" x2="1974" y2="2480" stroke="#3b82f6" strokeWidth="24" />
+            <line x1="1974" y1="2700" x2="1974" y2="2350" stroke="#3b82f6" strokeWidth="24" />
             <circle cx="1974" cy="2700" r="32" fill="#3b82f6" />
-            <circle cx="1974" cy="2480" r="36" fill="#6366f1" />
+            <circle cx="1974" cy="2350" r="36" fill="#6366f1" />
 
             {/* Cranial Head Bone */}
             <line
               x1="1974"
-              y1="2480"
-              x2={1974 + def.headYaw * 4.5}
-              y2={1750 + def.headPitch * 6}
+              y1="2350"
+              x2={1974 + def.headYaw * 3.2}
+              y2={1700 + def.headPitch * 4.2}
               stroke="#ec4899"
               strokeWidth="24"
             />
-            <circle cx={1974 + def.headYaw * 4.5} cy={1750 + def.headPitch * 6} r="38" fill="#ec4899" />
+            <circle cx={1974 + def.headYaw * 3.2} cy={1700 + def.headPitch * 4.2} r="38" fill="#ec4899" />
 
             {/* Eyebrows */}
             <line
-              x1={1974 + def.headYaw * 4.5}
-              y1={1750 + def.headPitch * 6}
+              x1={1974 + def.headYaw * 3.2}
+              y1={1700 + def.headPitch * 4.2}
               x2="1377"
-              y2={1330 + def.eyebrowLY * 6}
+              y2={1330 + def.eyebrowLY * 5.5}
               stroke="#10b981"
               strokeWidth="18"
             />
             <line
-              x1={1974 + def.headYaw * 4.5}
-              y1={1750 + def.headPitch * 6}
+              x1={1974 + def.headYaw * 3.2}
+              y1={1700 + def.headPitch * 4.2}
               x2="2637"
-              y2={1340 + def.eyebrowRY * 6}
+              y2={1340 + def.eyebrowRY * 5.5}
               stroke="#10b981"
               strokeWidth="18"
             />
-            <circle cx="1377" cy={1330 + def.eyebrowLY * 6} r="26" fill="#10b981" />
-            <circle cx="2637" cy={1340 + def.eyebrowRY * 6} r="26" fill="#10b981" />
+            <circle cx="1377" cy={1330 + def.eyebrowLY * 5.5} r="26" fill="#10b981" />
+            <circle cx="2637" cy={1340 + def.eyebrowRY * 5.5} r="26" fill="#10b981" />
 
             {/* Eyes */}
             <line
-              x1={1974 + def.headYaw * 4.5}
-              y1={1750 + def.headPitch * 6}
+              x1={1974 + def.headYaw * 3.2}
+              y1={1700 + def.headPitch * 4.2}
               x2={1332 + def.gazeX * 4}
               y2={1693 + def.gazeY * 3}
               stroke="#06b6d4"
               strokeWidth="18"
             />
             <line
-              x1={1974 + def.headYaw * 4.5}
-              y1={1750 + def.headPitch * 6}
+              x1={1974 + def.headYaw * 3.2}
+              y1={1700 + def.headPitch * 4.2}
               x2={2627 + def.gazeX * 4}
               y2={1702 + def.gazeY * 3}
               stroke="#06b6d4"
@@ -426,8 +410,8 @@ export const ModelSvgRig: React.FC<ModelSvgRigProps> = ({ def, showBones, classN
 
             {/* Mouth */}
             <line
-              x1={1974 + def.headYaw * 4.5}
-              y1={1750 + def.headPitch * 6}
+              x1={1974 + def.headYaw * 3.2}
+              y1={1700 + def.headPitch * 4.2}
               x2={mouthCenterX}
               y2={mouthCenterY}
               stroke="#f43f5e"

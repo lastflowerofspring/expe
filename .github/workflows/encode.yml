@@ -1,0 +1,115 @@
+name: Rise of a Champion — encode to H.265 + upload to R2
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "first index (1-based, inclusive)"
+        required: false
+        default: "1"
+      end:
+        description: "last index (1-based, inclusive)"
+        required: false
+        default: "250"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.gen.outputs.matrix }}
+    steps:
+      - id: gen
+        env:
+          LINKS_B64: ${{ secrets.COURSE_LINKS_B64 }}
+          START: ${{ inputs.start }}
+          END: ${{ inputs.end }}
+        run: |
+          set -euo pipefail
+          echo "$LINKS_B64" | base64 -d > links.txt
+          total=$(wc -l < links.txt)
+          echo "total links: $total"
+          python3 - "$START" "$END" <<'PY' > /tmp/list.json
+import json,sys
+s,e=int(sys.argv[1]),int(sys.argv[2])
+print(json.dumps([{"idx":i,"line":i} for i in range(s,e+1)]))
+PY
+          echo "matrix=$(cat /tmp/list.json)" >> "$GITHUB_OUTPUT"
+
+  encode:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        item: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - name: fetch link
+        env:
+          LINKS_B64: ${{ secrets.COURSE_LINKS_B64 }}
+        run: |
+          set -euo pipefail
+          echo "$LINKS_B64" | base64 -d > links.txt
+          sed -n "${LINE}p" links.txt > url.txt
+          echo "URL_LINE=$(cat url.txt)" >> "$GITHUB_ENV"
+          printf 'IDX=%03d\n' "$LINE" >> "$GITHUB_ENV"
+          echo "index $LINE -> $(cat url.txt)"
+          rm -f links.txt
+        env:
+          LINE: ${{ matrix.item.line }}
+
+      - name: install tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg python3-pip >/dev/null
+          pip install -q --break-system-packages yt-dlp
+          yt-dlp --version
+          ffmpeg -hide_banner -version | head -1
+
+      - name: download (HLS, retries)
+        run: |
+          set -euo pipefail
+          yt-dlp --referer "https://chessmood.com/" \
+                 -f "bestvideo[height<=720]+bestaudio/best[height<=720]" \
+                 -N 16 \
+                 --fragment-retries 10 --retries 10 \
+                 -o raw.mp4 "$URL_LINE"
+          ls -l raw.mp4
+
+      - name: encode H.265
+        run: |
+          set -euo pipefail
+          ffmpeg -y -hide_banner -i raw.mp4 \
+                 -vcodec libx265 -crf 22 -preset ultrafast \
+                 -acodec aac -b:a 80k -tag:v hvc1 \
+                 "out.mp4"
+          ls -l out.mp4
+
+      - name: upload to R2
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          set -euo pipefail
+          pip install -q --break-system-packages boto3
+          python3 - <<'PY'
+import os,boto3
+from botocore.config import Config
+idx=os.environ.get("IDX")
+s3=boto3.client("s3",
+    endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+    aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+    aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
+    config=Config(signature_version="s3v4"), region_name="auto")
+key=f"course/{idx}.mp4"
+s3.upload_file("out.mp4", os.environ["R2_BUCKET"], key,
+               ExtraArgs={"ContentType":"video/mp4"})
+print("uploaded", key)
+PY
+
+      - name: delete raw
+        if: always()
+        run: rm -f raw.mp4 out.mp4
